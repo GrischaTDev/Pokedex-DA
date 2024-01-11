@@ -95,7 +95,6 @@ async function pokemonPopup(i) {
                 <div id="about"></div>
             </div>
         </div>
-        </div>
     </div>
     `;
     
