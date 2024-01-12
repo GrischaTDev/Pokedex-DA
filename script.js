@@ -41,10 +41,10 @@ async function renderAllPokemon() {
     }
     console.log('Pokemon card details', currentPokemon); // Ausgabe der API 
     document.getElementById('loadingScreen').classList.add('d-none');
-    document.getElementById('body').classList.remove('hide-scrollbar'); 
+    document.getElementById('body').classList.remove('hide-scrollbar');
 }
 
-function typeTemplate(pokemon) {        
+function typeTemplate(pokemon) {
     const types = pokemon['types'];
     let htmlText = "";
     for (let j = 0; j < types.length; j++) {
@@ -86,8 +86,8 @@ async function pokemonPopup(i) {
                 <menu>
                     <div class="pokemon-left" onclick="pokemonPopup(currentPokemonId -1)"><img src="./img/navigate-left.svg"></div>
                     <div class="menu">
-                        <div class="menu-start" href="" id="test" onclick="loadAbout()">About</div>
-                        <div class="menu-end" href="" onclick="loadBaseStats()">Base Stats</div>
+                        <div class="menu-start" href="" onclick="loadBaseStats()">Base Stats</div>
+                        <div class="menu-end" href="" id="test" onclick="loadAbout()">About</div>
                         <!-- <div class="menu-end" onclick="loadEvolution(i)">Evolution</div> -->
                     </div>
                     <div class="pokemon-right" onclick="pokemonPopup(currentPokemonId +1)"><img src="./img/navigate.svg"></div>
@@ -97,12 +97,12 @@ async function pokemonPopup(i) {
         </div>
     </div>
     `;
-    
+
     if (currentPokemonId == 0) {
         currentPokemonId++;
     }
 
-    loadAbout();
+    loadBaseStats();
 }
 
 function loadAbout() {
@@ -158,7 +158,7 @@ function loadBaseStats() {
 //     let url2 = evolve['evolution_chain']['url'];
 //     let response2 = await fetch(url2);
 //     let evolve2 = await response2.json();
-    
+
 
 //     console.log('Loaded pokemon evolve', evolve); // Ausgabe der API
 //     console.log('Loaded pokemon evolve', evolve2['chain']['evolves_to']); // Ausgabe der API
@@ -185,7 +185,7 @@ async function searchPokemon() {
         const number = currentSearchPokemon['id'];
         const name = currentSearchPokemon['name'];
 
-        if(name.toLowerCase().includes(search)) {
+        if (name.toLowerCase().includes(search)) {
 
             renderPokemonList.innerHTML += /* html */ `
             <div onclick="pokemonPopup(${i})" class="pokemon-card">
