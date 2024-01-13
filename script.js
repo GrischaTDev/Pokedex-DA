@@ -20,19 +20,17 @@ async function renderAllPokemon() {
         let pokemonUrl = pokemon[i]['url'];
         let response = await fetch(pokemonUrl);
         currentPokemon = await response.json();
-
         const number = currentPokemon['id'];
         const name = currentPokemon['name'];
 
-        renderPokemon(number, name);
+        document.getElementById('pokedex').innerHTML += singlePokemonTemplate(number, name);
     }
     console.log('Pokemon card details', currentPokemon); // Ausgabe der API 
-    document.getElementById('loadingScreen').classList.add('d-none');
-    document.getElementById('body').classList.remove('hide-scrollbar');
+    disableLoadingScreen();
 }
 
-function renderPokemon(number, name) {
-    document.getElementById('pokedex').innerHTML += /* html */ `
+function singlePokemonTemplate(number, name) {
+    return `
     <div onclick="pokemonPopup(${i})" class="pokemon-card">
     <div class="type-card">
         <div class="types-content">
@@ -68,20 +66,14 @@ async function pokemonPopup(i) {
     const number = currentPokemonPopup['id'];
     const name = currentPokemonPopup['name'];
 
-    document.getElementById('pokemon-stats').classList.remove('d-none');
-    document.getElementById('body').classList.add('hide-scrollbar');
-
-    popupContent(number, name);
-
-    if (currentPokemonId == 0) {
-        currentPokemonId++;
-    }
-
+    openPopup();
+    document.getElementById('pokemon-stats').innerHTML = popupPokemonTemplate(number, name);
+    changeArrowLeft(); 
     loadBaseStats();
 }
 
-function popupContent(number, name) {
-    document.getElementById('pokemon-stats').innerHTML = /* html */ `
+function popupPokemonTemplate(number, name) {
+    return `
     <div class="pokemon-popup" onclick="closePopup()">
         <div class="closeMobile" onclick="closePopup()">Close</div>
         <div id="pokemon-popup-card${i}" class="pokemon-popup-card" onclick="notClose(event)">  
@@ -95,7 +87,7 @@ function popupContent(number, name) {
             <img src="img/pokemon/${number}.png" alt="">
             <div class="pokemon-info-card">
                 <menu>
-                    <div class="pokemon-left" onclick="pokemonPopup(currentPokemonId -1)"><img src="./img/navigate-left.svg"></div>
+                    <div class="pokemon-left" onclick="pokemonPopup(currentPokemonId -1)"><img id="arrowLeft" src="./img/navigate-left.svg"></div>
                     <div class="menu">
                         <div class="menu-start" href="" onclick="loadBaseStats()">Base Stats</div>
                         <div class="menu-end" href="" id="test" onclick="loadAbout()">About</div>
@@ -153,6 +145,13 @@ function loadBaseStats() {
     }
 }
 
+function changeArrowLeft() {
+    let pokemonArrowSrc = document.getElementById('arrowLeft');
+    if (currentPokemonId == 0) {
+        pokemonArrowSrc.src = './img/navigate-left-end.svg';
+    }
+}
+
 async function searchPokemon() {
     let search = document.getElementById('inputSearch').value;
     search = search.toLowerCase();
@@ -189,6 +188,16 @@ async function renderSearchPokemon(search, pokemon, renderPokemonList) {
             `;
         }
     }
+}
+
+function disableLoadingScreen() {
+    document.getElementById('loadingScreen').classList.add('d-none');
+    document.getElementById('body').classList.remove('hide-scrollbar');
+}
+
+function openPopup() {
+    document.getElementById('pokemon-stats').classList.remove('d-none');
+    document.getElementById('body').classList.add('hide-scrollbar');
 }
 
 function closePopup() {

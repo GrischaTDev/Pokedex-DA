@@ -49,6 +49,30 @@ header {
     height: 60px;
 }
 
+.menuRegions {
+    width: 100%;
+    border-bottom: 2px solid #e5e5e5;
+    display: flex;
+    justify-content: space-around;
+}
+
+.menuRegions a {
+    color: #0c1870 ;
+    font-weight: bold;
+    text-decoration: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    height: 40px;
+    width: 100%;
+}
+
+.menuRegions a:hover {
+    background-color: #ffce31;
+
+}
+
 #pokedex {
     max-width: 1400px;
     margin-top: 18px;
