@@ -5,7 +5,7 @@ let currentPokemonId = 0;
 let currentPokemonPopup;
 
 async function loadPokemon() {
-    let url = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=50';
+    let url = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=20';
     let response = await fetch(url);
     allPokemon = await response.json();
     console.log('Loaded all pokemon', allPokemon); // Ausgabe der API
@@ -15,6 +15,7 @@ async function loadPokemon() {
 
 async function renderAllPokemon() {
     pokemon = allPokemon['results'];
+    document.getElementById('pokedex').innerHTML = '';
 
     for (i = 0; i < pokemon.length; i++) {
         let pokemonUrl = pokemon[i]['url'];
@@ -29,14 +30,14 @@ async function renderAllPokemon() {
     disableLoadingScreen();
 }
 
-function singlePokemonTemplate(number, name) {
+function singlePokemonTemplate(number, name, id) {
     return `
     <div onclick="pokemonPopup(${i})" class="pokemon-card">
     <div class="type-card">
         <div class="types-content">
             ${typeTemplate(currentPokemon)}
         </div>
-        <div class="pokemonId">#${number}</div>
+        <div class="pokemonId">#${id}</div>
     </div>
         <img src="img/pokemon/${number}.png" alt="">
         <div>${name}</div>      
