@@ -223,3 +223,15 @@ function changeHeaderAll() {
     <div>All Pokemon</div>
     `;
 }
+
+// Test der onscroll function //////////////////////////////////////////////////
+window.onscroll = function() {myFunction()};
+
+function myFunction() {
+  if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+    // document.getElementById("myP").className = "test";
+    console.log('Onscroll Test');
+  } else {
+    // document.getElementById("myP").className = "";
+  }
+}
