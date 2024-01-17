@@ -11,7 +11,6 @@ async function loadCompletePokemon() {
     let response = await fetch(url);
     completePokemon = await response.json();
     completePokemon = completePokemon['results'];
-    console.log('Alle Pokemon die es in der API gibt!', completePokemon); // Ausgabe der API
 }
 
 async function loadStartPokemon() {
@@ -19,7 +18,6 @@ async function loadStartPokemon() {
     let response = await fetch(url);
     allPokemon = await response.json();
     allPokemon = allPokemon['results'];
-    console.log('Alle Pokemon der Startseite', allPokemon); // Ausgabe der API
 
     renderAllPokemon();
 }
@@ -75,14 +73,14 @@ async function pokemonPopup(i) {
     const name = currentAllPokemonPopup['name'];
     currentPokemonId = i;
 
-    document.getElementById('pokemon-stats').innerHTML = popupPokemonTemplate(number, name);
+    document.getElementById('pokemon-stats').innerHTML = popupPokemonTemplate(number, name, i);
 
     openPopup();
     changeArrowLeft(); 
     loadBaseStats();
 }
 
-function popupPokemonTemplate(number, name) {
+function popupPokemonTemplate(number, name, i) {
     return `
     <div class="pokemon-popup" onclick="closePopup()">
         <div class="closeMobile" onclick="closePopup()">Close</div>
