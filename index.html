@@ -13,7 +13,7 @@
     <title>Pokédex - Pokémon Wiki</title>
     <link rel="icon" type="image/x-icon" href="./img/favicon.ico">
 </head>
-<body id="body" class="hide-scrollbar" onload="loadPokemon()">
+<body id="body" class="hide-scrollbar" onload="loadCompletePokemon(), loadStartPokemon(),  loadRegions()">
     <div id="loadingScreen" class="">
         <img src="./img/loading2.gif" alt="">
         <div class="loadingText">LOADING POKEDEX</div>
@@ -23,11 +23,14 @@
         <input type="text" id="inputSearch" placeholder="Pokemon suchen" onkeydown="searchPokemon()"> 
     </header>
     <div class="menuRegions">
-        <a onclick="loadPokemon()">ALL</a>
-        <a onclick="loadKantoPokedex()">KANTO</a>
+        <a onclick="renderAllPokemon()">ALL</a>
+        <a onclick="renderKantoPokemon()">KANTO</a>
         <a onclick="loadJohtoPokedex()">JOHTO</a>
         <a onclick="loadHoennPokedex()">HOENN</a>
         <a onclick="loadSinnohPokedex()">SINNOH</a>
+    </div>
+    <div id="header-img">
+        <div>All Pokemon</div>
     </div>
     <div id="pokedex"></div>
     <div id="pokemon-stats" class="pokemon-stats-site d-none"></div>

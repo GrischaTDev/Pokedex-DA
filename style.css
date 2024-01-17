@@ -45,6 +45,21 @@ header {
     border-bottom: 2px solid #e5e5e5;
 }
 
+#header-img {
+    background-image: url(./img/allPokemon.svg);
+    background-size: cover;
+    background-position: center;
+    height: 200px;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 46px;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
 .logo {
     height: 60px;
 }

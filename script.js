@@ -1,43 +1,52 @@
-let allPokemon;
-let currentPokemon;
+let completePokemon; // Alle Pokemon die es in der API gibt! Wird für die Regionen benötigt.
+let allPokemon; // Hier werden alle Pokemon der Startseite geladen!
+///////////////////////////////////////////////////////////////////////////////////////////
+let currentAllPokemon;
+let currentAllPokemonPopup;
 let currentSearchPokemon;
-let currentPokemonId = 0;
-let currentPokemonPopup;
+///////////////////////////////////////////////////////////////////////////////////////////
 
-async function loadPokemon() {
-    let url = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=20';
+async function loadCompletePokemon() {
+    let url = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=2000';
+    let response = await fetch(url);
+    completePokemon = await response.json();
+    completePokemon = completePokemon['results'];
+    console.log('Alle Pokemon die es in der API gibt!', completePokemon); // Ausgabe der API
+}
+
+async function loadStartPokemon() {
+    let url = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=30';
     let response = await fetch(url);
     allPokemon = await response.json();
-    console.log('Loaded all pokemon', allPokemon); // Ausgabe der API
+    allPokemon = allPokemon['results'];
+    console.log('Alle Pokemon der Startseite', allPokemon); // Ausgabe der API
 
     renderAllPokemon();
 }
 
 async function renderAllPokemon() {
-    pokemon = allPokemon['results'];
+    changeHeaderAll();
     document.getElementById('pokedex').innerHTML = '';
-
-    for (i = 0; i < pokemon.length; i++) {
-        let pokemonUrl = pokemon[i]['url'];
+    for (i = 0; i < allPokemon.length; i++) {
+        let pokemonUrl = allPokemon[i]['url'];
         let response = await fetch(pokemonUrl);
-        currentPokemon = await response.json();
-        const number = currentPokemon['id'];
-        const name = currentPokemon['name'];
+        currentAllPokemon = await response.json();
+        const number = currentAllPokemon['id'];
+        const name = currentAllPokemon['name'];
 
         document.getElementById('pokedex').innerHTML += singlePokemonTemplate(number, name);
     }
-    console.log('Pokemon card details', currentPokemon); // Ausgabe der API 
     disableLoadingScreen();
 }
 
-function singlePokemonTemplate(number, name, id) {
+function singlePokemonTemplate(number, name, currentKantoPokemon) {
     return `
     <div onclick="pokemonPopup(${i})" class="pokemon-card">
     <div class="type-card">
         <div class="types-content">
-            ${typeTemplate(currentPokemon)}
+            ${typeTemplate(currentAllPokemon)}
         </div>
-        <div class="pokemonId">#${id}</div>
+        <div class="pokemonId">#${number}</div>
     </div>
         <img src="img/pokemon/${number}.png" alt="">
         <div>${name}</div>      
@@ -45,8 +54,8 @@ function singlePokemonTemplate(number, name, id) {
     `;
 }
 
-function typeTemplate(pokemon) {
-    const types = pokemon['types'];
+function typeTemplate(currentPokemon) {
+    const types = currentPokemon['types'];
     let htmlText = "";
     for (let j = 0; j < types.length; j++) {
         htmlText += `
@@ -59,16 +68,16 @@ function typeTemplate(pokemon) {
 }
 
 async function pokemonPopup(i) {
-    let pokemonUrl = pokemon[i]['url'];
+    let pokemonUrl = completePokemon[i]['url'];
     let response = await fetch(pokemonUrl);
-    currentPokemonPopup = await response.json();
-
+    currentAllPokemonPopup = await response.json();
+    const number = currentAllPokemonPopup['id'];
+    const name = currentAllPokemonPopup['name'];
     currentPokemonId = i;
-    const number = currentPokemonPopup['id'];
-    const name = currentPokemonPopup['name'];
+
+    document.getElementById('pokemon-stats').innerHTML = popupPokemonTemplate(number, name);
 
     openPopup();
-    document.getElementById('pokemon-stats').innerHTML = popupPokemonTemplate(number, name);
     changeArrowLeft(); 
     loadBaseStats();
 }
@@ -80,7 +89,7 @@ function popupPokemonTemplate(number, name) {
         <div id="pokemon-popup-card${i}" class="pokemon-popup-card" onclick="notClose(event)">  
         <div class="type-card">
                 <div class="types-content">
-                    ${typeTemplate(currentPokemonPopup)}
+                    ${typeTemplate(currentAllPokemonPopup)}
                 </div>
                 <div class="pokemonId">#${number}</div>   
             </div>
@@ -104,9 +113,9 @@ function popupPokemonTemplate(number, name) {
 }
 
 function loadAbout() {
-    const species = currentPokemonPopup['species']['name'];
-    const height = currentPokemonPopup['height'];
-    const weight = currentPokemonPopup['weight'];
+    const species = currentAllPokemonPopup['species']['name'];
+    const height = currentAllPokemonPopup['height'];
+    const weight = currentAllPokemonPopup['weight'];
 
     document.getElementById('about').innerHTML = /* html */`
 
@@ -125,7 +134,7 @@ function loadAbout() {
 }
 
 function loadBaseStats() {
-    const baseStats = currentPokemonPopup['stats'];
+    const baseStats = currentAllPokemonPopup['stats'];
     document.getElementById('about').innerHTML = '';
 
     for (s = 0; s < baseStats.length; s++) {
@@ -208,4 +217,11 @@ function closePopup() {
 
 function notClose(event) {
     event.stopPropagation();
+}
+
+function changeHeaderAll() {
+    let header = document.getElementById('header-img');
+    header.innerHTML = /* html */ `
+    <div>All Pokemon</div>
+    `;
 }
