@@ -42,18 +42,19 @@ async function renderKantoPokemon() {
         // Hier wird die Normale Pokemon API mit der ID der Pokemon aus dem Kanto Pokedex geladen.
         await loadAllPokemonApi(kantoId);
 
-        let number = currentKantoPokemon['id']
-        let name = currentKantoPokemon['name']
+        let number = currentKantoPokemon['id'];
+        let arrayNumber = currentKantoPokemon['id']-1;
+        let name = currentKantoPokemon['name'];
         let listNumber = i+1;
 
-        document.getElementById('pokedex').innerHTML += singlePokemonTemplateKanto(number, name, i, listNumber);
+        document.getElementById('pokedex').innerHTML += singlePokemonTemplateKanto(number, name, arrayNumber, listNumber);
     }
     console.log(headerTitel, 'Pokedex geladen!');
 }
 
-function singlePokemonTemplateKanto(number, name, i, listNumber) {
+function singlePokemonTemplateKanto(number, name, arrayNumber, listNumber) {
     return `
-    <div onclick="pokemonPopup(${number})" class="pokemon-card">
+    <div onclick="pokemonPopup(${arrayNumber})" class="pokemon-card">
     <div class="type-card">
         <div class="types-content">
             ${typeTemplate(currentKantoPokemon)}
