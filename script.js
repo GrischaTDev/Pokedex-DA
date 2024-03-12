@@ -1,23 +1,19 @@
 let completePokemon; // Alle Pokemon die es in der API gibt! Wird für die Regionen benötigt.
-let allPokemon; // Hier werden alle Pokemon der Startseite geladen!
 ///////////////////////////////////////////////////////////////////////////////////////////
 let currentAllPokemon;
 let currentAllPokemonPopup;
 let currentSearchPokemon;
 ///////////////////////////////////////////////////////////////////////////////////////////
 
+/**
+ * 
+ *
+ */
 async function loadCompletePokemon() {
     let url = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=2000';
     let response = await fetch(url);
     completePokemon = await response.json();
     completePokemon = completePokemon['results'];
-}
-
-async function loadStartPokemon() {
-    let url = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=30';
-    let response = await fetch(url);
-    allPokemon = await response.json();
-    allPokemon = allPokemon['results'];
 
     renderAllPokemon();
 }
@@ -25,8 +21,8 @@ async function loadStartPokemon() {
 async function renderAllPokemon() {
     changeHeaderAll();
     document.getElementById('pokedex').innerHTML = '';
-    for (i = 0; i < allPokemon.length; i++) {
-        let pokemonUrl = allPokemon[i]['url'];
+    for (i = 0; i < 20; i++) {
+        let pokemonUrl = completePokemon[i]['url'];
         let response = await fetch(pokemonUrl);
         currentAllPokemon = await response.json();
         const number = currentAllPokemon['id'];
@@ -37,6 +33,13 @@ async function renderAllPokemon() {
     disableLoadingScreen();
 }
 
+/**
+ * 
+ * @param {*} number 
+ * @param {*} name 
+ * @param {*} currentKantoPokemon 
+ * @returns 
+ */
 function singlePokemonTemplate(number, name, currentKantoPokemon) {
     return `
     <div onclick="pokemonPopup(${i})" class="pokemon-card">
@@ -163,7 +166,7 @@ function changeArrowLeft() {
 async function searchPokemon() {
     let search = document.getElementById('inputSearch').value;
     search = search.toLowerCase();
-    pokemon = allPokemon['results'];
+    pokemon = completePokemon;
 
     let renderPokemonList = document.getElementById('pokedex');
     renderPokemonList.innerHTML = '';

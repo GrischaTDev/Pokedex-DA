@@ -13,7 +13,6 @@ async function loadRegions() {
     let response = await fetch(url);
     allRegions = await response.json();
     allRegions = allRegions['results'];
-    console.log('Alle Regionen', allRegions);
 }
 
 function renderRegion(test, name) {
