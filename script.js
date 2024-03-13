@@ -3,6 +3,7 @@ let completePokemon; // Alle Pokemon die es in der API gibt! Wird für die Regio
 let currentAllPokemon;
 let currentAllPokemonPopup;
 let currentSearchPokemon;
+let loadMorePokemon = 20
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 /**
@@ -21,7 +22,7 @@ async function loadCompletePokemon() {
 async function renderAllPokemon() {
     changeHeaderAll();
     document.getElementById('pokedex').innerHTML = '';
-    for (i = 0; i < 20; i++) {
+    for (i = 0; i < loadMorePokemon; i++) {
         let pokemonUrl = completePokemon[i]['url'];
         let response = await fetch(pokemonUrl);
         currentAllPokemon = await response.json();
@@ -32,6 +33,15 @@ async function renderAllPokemon() {
     }
     disableLoadingScreen();
 }
+
+// Event-Listener für das Scrollen hinzufügen
+window.addEventListener('scroll', () => {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+        loadMorePokemon += 10;
+        renderAllPokemon();
+    }
+});
+
 
 /**
  * 
