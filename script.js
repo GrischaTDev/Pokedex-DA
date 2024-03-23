@@ -3,15 +3,20 @@ let completePokemon; // Alle Pokemon die es in der API gibt! Wird für die Regio
 let currentAllPokemon;
 let currentAllPokemonPopup;
 let currentSearchPokemon;
-let loadMorePokemon = 20
+let loadMorePokemon = 20;
 ///////////////////////////////////////////////////////////////////////////////////////////
 
-/**
- * 
- *
- */
+
 async function loadCompletePokemon() {
     let url = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=2000';
+    let response = await fetch(url);
+    completePokemon = await response.json();
+    completePokemon = completePokemon['results'];
+    loadAllPokemon();
+}
+
+async function loadAllPokemon() {
+    let url = `https://pokeapi.co/api/v2/pokemon?offset=0&limit=2000`;
     let response = await fetch(url);
     completePokemon = await response.json();
     completePokemon = completePokemon['results'];
@@ -34,13 +39,30 @@ async function renderAllPokemon() {
     disableLoadingScreen();
 }
 
-// Event-Listener für das Scrollen hinzufügen
-window.addEventListener('scroll', () => {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-        loadMorePokemon += 10;
-        renderAllPokemon();
+async function renderAllPokemonMore() {
+    for (i = 0; i < loadMorePokemon; i++) {
+        let pokemonUrl = completePokemon[i]['url'];
+        let response = await fetch(pokemonUrl);
+        currentAllPokemon = await response.json();
+        const number = currentAllPokemon['id'];
+        const name = currentAllPokemon['name'];
+
+        document.getElementById('pokedex').innerHTML += singlePokemonTemplate(number, name);
     }
-});
+}
+
+function loadMore() {
+    loadMorePokemon += 10;
+    renderAllPokemonMore();
+}
+
+// // Event-Listener für das Scrollen hinzufügen
+// window.addEventListener('scroll', () => {
+//     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+//         loadMorePokemon += 10;
+//         renderAllPokemon();
+//     }
+// });
 
 
 /**
@@ -235,16 +257,4 @@ function changeHeaderAll() {
     header.innerHTML = /* html */ `
     <div>All Pokemon</div>
     `;
-}
-
-// Test der onscroll function //////////////////////////////////////////////////
-window.onscroll = function() {myFunction()};
-
-function myFunction() {
-  if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
-    // document.getElementById("myP").className = "test";
-    console.log('Onscroll Test');
-  } else {
-    // document.getElementById("myP").className = "";
-  }
 }
