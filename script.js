@@ -4,6 +4,7 @@ let currentAllPokemon;
 let currentAllPokemonPopup;
 let currentSearchPokemon;
 let loadMorePokemon = 20;
+let nextPokemon = 0;
 ///////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -12,22 +13,13 @@ async function loadCompletePokemon() {
     let response = await fetch(url);
     completePokemon = await response.json();
     completePokemon = completePokemon['results'];
-    loadAllPokemon();
-}
-
-async function loadAllPokemon() {
-    let url = `https://pokeapi.co/api/v2/pokemon?offset=0&limit=2000`;
-    let response = await fetch(url);
-    completePokemon = await response.json();
-    completePokemon = completePokemon['results'];
-
     renderAllPokemon();
 }
 
 async function renderAllPokemon() {
     changeHeaderAll();
-    document.getElementById('pokedex').innerHTML = '';
-    for (i = 0; i < loadMorePokemon; i++) {
+
+    for (i = nextPokemon; i < loadMorePokemon; i++) {
         let pokemonUrl = completePokemon[i]['url'];
         let response = await fetch(pokemonUrl);
         currentAllPokemon = await response.json();
@@ -39,21 +31,11 @@ async function renderAllPokemon() {
     disableLoadingScreen();
 }
 
-async function renderAllPokemonMore() {
-    for (i = 0; i < loadMorePokemon; i++) {
-        let pokemonUrl = completePokemon[i]['url'];
-        let response = await fetch(pokemonUrl);
-        currentAllPokemon = await response.json();
-        const number = currentAllPokemon['id'];
-        const name = currentAllPokemon['name'];
-
-        document.getElementById('pokedex').innerHTML += singlePokemonTemplate(number, name);
-    }
-}
 
 function loadMore() {
-    loadMorePokemon += 10;
-    renderAllPokemonMore();
+    loadMorePokemon += 20;
+    nextPokemon += 20;
+    renderAllPokemon();
 }
 
 // // Event-Listener für das Scrollen hinzufügen
