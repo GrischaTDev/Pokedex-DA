@@ -38,13 +38,12 @@ function loadMore() {
     renderAllPokemon();
 }
 
-// // Event-Listener für das Scrollen hinzufügen
-// window.addEventListener('scroll', () => {
-//     if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-//         loadMorePokemon += 10;
-//         renderAllPokemon();
-//     }
-// });
+// Event-Listener für das Scrollen hinzufügen
+window.addEventListener('scroll', () => {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
+        loadMore();
+    }
+});
 
 
 /**
