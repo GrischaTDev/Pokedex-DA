@@ -59,7 +59,7 @@ function singlePokemonTemplateKanto(number, name, arrayNumber, listNumber) {
         </div>
         <div class="pokemonId">#${listNumber}</div>
     </div>
-        <img src="../img/pokemon/${number}.png" alt="">
+        <img src="img/pokemon/${number}.png" alt="">
         <div>${name}</div>      
     </div>
     `;

@@ -38,8 +38,7 @@ async function renderAllPokemon() {
 
 
 window.addEventListener('scroll', () => {
-    const currentPageUrl = window.location.href;
-    if (currentPageUrl.includes('/index.html') && window.innerHeight + window.scrollY >= document.body.offsetHeight && !stopScroll) {  
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight && !stopScroll) {  
         loadMorePokemon += 20;
         nextPokemon += 20;
         stopScroll = true;             
@@ -190,7 +189,7 @@ async function searchPokemon() {
 }
 
 async function renderSearchPokemon(search, pokemon, renderPokemonList) {
-    for (i = 0; i < pokemon.length; i++) {
+    for (let i = 0; i < pokemon.length; i++) {
         let pokemonUrl = pokemon[i]['url'];
         let response = await fetch(pokemonUrl);
         currentSearchPokemon = await response.json();
@@ -198,7 +197,7 @@ async function renderSearchPokemon(search, pokemon, renderPokemonList) {
         const number = currentSearchPokemon['id'];
         const name = currentSearchPokemon['name'];
 
-        if (name.toLowerCase().includes(search)) {
+        if (name.includes(search)) {
 
             renderPokemonList.innerHTML += /* html */ `
             <div onclick="pokemonPopup(${i})" class="pokemon-card">
@@ -235,9 +234,3 @@ function notClose(event) {
     event.stopPropagation();
 }
 
-function changeHeaderAll() {
-    let header = document.getElementById('header-img');
-    header.innerHTML = /* html */ `
-    <div>All Pokemon</div>
-    `;
-}
