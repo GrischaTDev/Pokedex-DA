@@ -8,20 +8,21 @@ let headerTitel;
 ////////////////////////////////////////////////
 
 
-async function loadRegions() {
+async function loadRegions(currentRegion) {
     let url = 'https://pokeapi.co/api/v2/pokedex/?offset=0&limit=32';
     let response = await fetch(url);
     allRegions = await response.json();
     allRegions = allRegions['results'];
+    loadRegionKanto(currentRegion);
 }
 
-function renderRegion(test, name) {
+function renderRegion(currentRegion, name) {
     headerTitel = name;
-    loadRegionKanto(test)
+    loadRegionKanto(currentRegion)
 }
 
-async function loadRegionKanto(test) {
-    let kantoUrl = allRegions[test]['url'];
+async function loadRegionKanto(currentRegion) {
+    let kantoUrl = allRegions[currentRegion]['url'];
     let response = await fetch(kantoUrl);
     regionKanto = await response.json();
     renderKantoPokemon()
@@ -29,11 +30,8 @@ async function loadRegionKanto(test) {
 
 async function renderKantoPokemon() {
     let kantoPokemons = regionKanto['pokemon_entries']
-    document.getElementById('pokedex').innerHTML = '';
-
-    changeHeaderTitle();
-
-    for (let i = 0; i < kantoPokemons.length; i++) {
+    disableLoadingScreen();
+    for (let i = nextPokemon; i < loadMorePokemon; i++) {
         let kantoPokemonUrl = kantoPokemons[i]['pokemon_species']['url'];
         let response = await fetch(kantoPokemonUrl);
         currentKantoPokemonId = await response.json();
@@ -48,7 +46,8 @@ async function renderKantoPokemon() {
 
         document.getElementById('pokedex').innerHTML += singlePokemonTemplateKanto(number, name, arrayNumber, listNumber);
     }
-    console.log(headerTitel, 'Pokedex geladen!');
+    stopScroll = false;
+    disableLoadingScreen();
 }
 
 function singlePokemonTemplateKanto(number, name, arrayNumber, listNumber) {
@@ -60,7 +59,7 @@ function singlePokemonTemplateKanto(number, name, arrayNumber, listNumber) {
         </div>
         <div class="pokemonId">#${listNumber}</div>
     </div>
-        <img src="img/pokemon/${number}.png" alt="">
+        <img src="../img/pokemon/${number}.png" alt="">
         <div>${name}</div>      
     </div>
     `;
@@ -74,9 +73,12 @@ async function loadAllPokemonApi(kantoId) {
 }
 
 
-function changeHeaderTitle() {
-    let header = document.getElementById('header-img');
-    header.innerHTML = /* html */ `
-    <div>${headerTitel}</div>
-    `;
-}
+window.addEventListener('scroll', () => {
+    const currentPageUrl = window.location.href;
+    if (!currentPageUrl.includes('/index.html') && window.innerHeight + window.scrollY >= document.body.offsetHeight && !stopScroll) {  
+        loadMorePokemon += 20;
+        nextPokemon += 20;
+        stopScroll = true;             
+        renderKantoPokemon();
+    }
+});

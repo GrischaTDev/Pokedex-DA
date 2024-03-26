@@ -3,17 +3,20 @@ let completePokemon; // Alle Pokemon die es in der API gibt! Wird für die Regio
 let currentAllPokemon;
 let currentAllPokemonPopup;
 let currentSearchPokemon;
-let loadMorePokemon = 2;
+let loadMorePokemon = 20;
 let nextPokemon = 0;
+let stopScroll = false;
 ///////////////////////////////////////////////////////////////////////////////////////////
-
+async function initAllPokemon() {
+    await loadCompletePokemon();
+    renderAllPokemon();
+}
 
 async function loadCompletePokemon() {
     let url = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=2000';
     let response = await fetch(url);
     completePokemon = await response.json();
     completePokemon = completePokemon['results'];
-    renderAllPokemon();
 }
 
 
@@ -29,22 +32,17 @@ async function renderAllPokemon() {
 
         document.getElementById('pokedex').innerHTML += singlePokemonTemplate(number, name);
     }
+    stopScroll = false;
     disableLoadingScreen();
 }
 
 
-
-async function loadMore() {
-    loadMorePokemon += 2;
-    nextPokemon += 2;
-    renderAllPokemon();
-}
-
-// Event-Listener für das Scrollen hinzufügen
 window.addEventListener('scroll', () => {
-    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
-        loadMorePokemon += 2;
-        nextPokemon += 2;
+    const currentPageUrl = window.location.href;
+    if (currentPageUrl.includes('/index.html') && window.innerHeight + window.scrollY >= document.body.offsetHeight && !stopScroll) {  
+        loadMorePokemon += 20;
+        nextPokemon += 20;
+        stopScroll = true;             
         renderAllPokemon();
     }
 });
@@ -109,7 +107,7 @@ function popupPokemonTemplate(number, name, i) {
                 <div class="types-content">
                     ${typeTemplate(currentAllPokemonPopup)}
                 </div>
-                <div class="pokemonId">#${number}</div>   
+                <div class="pokemonId">#${i+1}</div>   
             </div>
             <div>${name}</div>     
             <img src="img/pokemon/${number}.png" alt="">
