@@ -1,13 +1,14 @@
 let completePokemon;
 let allPokemonData = []; // Alle Pokemon die es in der API gibt!
-let limit = 20;
-let set = 0;
 ///////////////////////////////////////////////////////////////////////////////////////////
 let currentPokemon;
 let currentSearchPokemon;
 let loadMorePokemon = 20;
+let nextPokemon = 0;
 let stopScroll = false;
 ///////////////////////////////////////////////////////////////////////////////////////////
+let limit = 20;
+let set = 0;
 
 
 async function initAllPokemon() {
@@ -41,7 +42,7 @@ function startLoadCompletePokemon() {
 
 
 async function renderAllPokemon() {
-    nextPokemon = loadMorePokemon - 20;
+
     for (i = nextPokemon; i < loadMorePokemon; i++) {
         currentPokemon = allPokemonData[i]['data'];
         let number = currentPokemon['id'];
@@ -56,6 +57,7 @@ async function renderAllPokemon() {
 
 window.addEventListener('scroll', () => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight && !stopScroll) {  
+        nextPokemon += 20;
         loadMorePokemon += 20;
         stopScroll = true;             
         renderAllPokemon();
@@ -93,10 +95,6 @@ function typeTemplate(allPokemonData) {
 }
 
 async function pokemonPopup(i) {
-    if (i == -1) {
-        return;
-    }
-
     let number = allPokemonData[i]['data']['id'];
     let name = allPokemonData[i]['data']['name'];
 
@@ -114,7 +112,7 @@ async function pokemonPopup(i) {
             <img src="img/pokemon/${number}.png" alt="">
             <div class="pokemon-info-card">
                 <menu>
-                    <div class="pokemon-left" onclick="pokemonPopup(${i -1})"><img id="arrowLeft" src="./img/navigate-left.svg"></div>
+                    <div class="pokemon-left" onclick="pokemonPopup(${number -1})"><img id="arrowLeft" src="./img/navigate-left.svg"></div>
                     <div class="menu">
                         <div class="menu-start" href="" onclick="loadBaseStats(${i})">Base Stats</div>
                         <div class="menu-end" href="" id="test" onclick="loadAbout(${i})">About</div>
@@ -128,7 +126,7 @@ async function pokemonPopup(i) {
     `;
 
     openPopup();
-    changeArrowLeft(i); 
+    changeArrowLeft(number); 
     loadBaseStats(i);
 }
 
@@ -174,31 +172,32 @@ function loadBaseStats(i) {
     }
 }
 
-
 function changeArrowLeft(i) {
     let pokemonArrowSrc = document.getElementById('arrowLeft');
-    if (allPokemonData[i]['data']['id'] == 1) {
+    if (allPokemonData[i]['id'] == 0) {
         pokemonArrowSrc.src = './img/navigate-left-end.svg';
     }
 }
 
-
 async function searchPokemon() {
     let search = document.getElementById('inputSearch').value;
     search = search.toLowerCase();
+
     let renderPokemonList = document.getElementById('pokedex');
     renderPokemonList.innerHTML = '';
 
     renderSearchPokemon(search, renderPokemonList);
 }
 
-
 async function renderSearchPokemon(search, renderPokemonList) {
     for (let i = 0; i < allPokemonData.length; i++) {
+
+
         const number = allPokemonData[i]['data']['id'];
         const name = allPokemonData[i]['data']['name'];
 
         if (name.includes(search)) {
+
             renderPokemonList.innerHTML += /* html */ `
             <div onclick="pokemonPopup(${i})" class="pokemon-card">
             <div class="type-card">
