@@ -1,4 +1,5 @@
 let completePokemon; // Alle Pokemon die es in der API gibt! Wird für die Regionen benötigt.
+let allPokemonData = [];
 ///////////////////////////////////////////////////////////////////////////////////////////
 let currentAllPokemon;
 let currentAllPokemonPopup;
@@ -7,30 +8,49 @@ let loadMorePokemon = 20;
 let nextPokemon = 0;
 let stopScroll = false;
 ///////////////////////////////////////////////////////////////////////////////////////////
+let limit = 20;
+let set = 0;
+
+
 async function initAllPokemon() {
     await loadCompletePokemon();
     renderAllPokemon();
+    startLoadCompletePokemon();
 }
 
 async function loadCompletePokemon() {
-    let url = 'https://pokeapi.co/api/v2/pokemon?offset=0&limit=2000';
+    let url = `https://pokeapi.co/api/v2/pokemon?offset=${set}&limit=${limit}`;
     let response = await fetch(url);
     completePokemon = await response.json();
     completePokemon = completePokemon['results'];
+
+    for (i = 0; i < completePokemon.length; i++) {
+        let pokemonUrl = completePokemon[i]['url'];
+        let response = await fetch(pokemonUrl);
+        currentAllPokemon = await response.json();
+        allPokemonData.push({ name: currentAllPokemon['name'], data: currentAllPokemon });
+    }
+    console.log('Alle Pokemon daten', allPokemonData);
+}
+
+function startLoadCompletePokemon() {
+    set = 20;
+    limit = 2000;
+    loadCompletePokemon();
 }
 
 
 async function renderAllPokemon() {
-    changeHeaderAll();
 
     for (i = nextPokemon; i < loadMorePokemon; i++) {
-        let pokemonUrl = completePokemon[i]['url'];
-        let response = await fetch(pokemonUrl);
-        currentAllPokemon = await response.json();
+        currentAllPokemon = allPokemonData[i]['data'];
+        // let pokemonUrl = completePokemon[i]['url'];
+        // let response = await fetch(pokemonUrl);
+        // currentAllPokemon = await response.json();
         const number = currentAllPokemon['id'];
         const name = currentAllPokemon['name'];
 
-        document.getElementById('pokedex').innerHTML += singlePokemonTemplate(number, name);
+        document.getElementById('pokedex').innerHTML += singlePokemonTemplate(i, number, name);
     }
     stopScroll = false;
     disableLoadingScreen();
@@ -51,10 +71,9 @@ window.addEventListener('scroll', () => {
  * 
  * @param {*} number 
  * @param {*} name 
- * @param {*} currentKantoPokemon 
  * @returns 
  */
-function singlePokemonTemplate(number, name, currentKantoPokemon) {
+function singlePokemonTemplate(i, number, name) {
     return `
     <div onclick="pokemonPopup(${i})" class="pokemon-card">
     <div class="type-card">
@@ -109,7 +128,7 @@ function popupPokemonTemplate(number, name, i) {
                 <div class="pokemonId">#${i+1}</div>   
             </div>
             <div>${name}</div>     
-            <img src="img/pokemon/${number}.png" alt="">
+            <img src="img/pokemon/${i+1}.png" alt="">
             <div class="pokemon-info-card">
                 <menu>
                     <div class="pokemon-left" onclick="pokemonPopup(currentPokemonId -1)"><img id="arrowLeft" src="./img/navigate-left.svg"></div>
@@ -180,22 +199,21 @@ function changeArrowLeft() {
 async function searchPokemon() {
     let search = document.getElementById('inputSearch').value;
     search = search.toLowerCase();
-    pokemon = completePokemon;
 
     let renderPokemonList = document.getElementById('pokedex');
     renderPokemonList.innerHTML = '';
 
-    renderSearchPokemon(search, pokemon, renderPokemonList);
+    renderSearchPokemon(search, renderPokemonList);
 }
 
-async function renderSearchPokemon(search, pokemon, renderPokemonList) {
-    for (let i = 0; i < pokemon.length; i++) {
-        let pokemonUrl = pokemon[i]['url'];
-        let response = await fetch(pokemonUrl);
-        currentSearchPokemon = await response.json();
+async function renderSearchPokemon(search, renderPokemonList) {
+    for (let i = 0; i < completePokemon.length; i++) {
+        let pokemonUrl = loadMorePokemon[i]['url'];
+        // let response = await fetch(pokemonUrl);
+        // currentSearchPokemon = await response.json();
 
-        const number = currentSearchPokemon['id'];
-        const name = currentSearchPokemon['name'];
+        const number = loadMorePokemon['id'];
+        const name = loadMorePokemon['name'];
 
         if (name.includes(search)) {
 
