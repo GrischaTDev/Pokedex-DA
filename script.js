@@ -1,15 +1,13 @@
-let completePokemon; // Alle Pokemon die es in der API gibt! Wird für die Regionen benötigt.
-let allPokemonData = [];
-///////////////////////////////////////////////////////////////////////////////////////////
-let currentAllPokemon;
-let currentAllPokemonPopup;
-let currentSearchPokemon;
-let loadMorePokemon = 20;
-let nextPokemon = 0;
-let stopScroll = false;
-///////////////////////////////////////////////////////////////////////////////////////////
+let completePokemon;
+let allPokemonData = []; // Alle Pokemon die es in der API gibt!
 let limit = 20;
 let set = 0;
+///////////////////////////////////////////////////////////////////////////////////////////
+let currentPokemon;
+let currentSearchPokemon;
+let loadMorePokemon = 20;
+let stopScroll = false;
+///////////////////////////////////////////////////////////////////////////////////////////
 
 
 async function initAllPokemon() {
@@ -17,6 +15,7 @@ async function initAllPokemon() {
     renderAllPokemon();
     startLoadCompletePokemon();
 }
+
 
 async function loadCompletePokemon() {
     let url = `https://pokeapi.co/api/v2/pokemon?offset=${set}&limit=${limit}`;
@@ -27,28 +26,26 @@ async function loadCompletePokemon() {
     for (i = 0; i < completePokemon.length; i++) {
         let pokemonUrl = completePokemon[i]['url'];
         let response = await fetch(pokemonUrl);
-        currentAllPokemon = await response.json();
+        let currentAllPokemon = await response.json();
         allPokemonData.push({ name: currentAllPokemon['name'], data: currentAllPokemon });
     }
     console.log('Alle Pokemon daten', allPokemonData);
 }
 
+
 function startLoadCompletePokemon() {
     set = 20;
-    limit = 2000;
+    limit = 1000;
     loadCompletePokemon();
 }
 
 
 async function renderAllPokemon() {
-
+    nextPokemon = loadMorePokemon - 20;
     for (i = nextPokemon; i < loadMorePokemon; i++) {
-        currentAllPokemon = allPokemonData[i]['data'];
-        // let pokemonUrl = completePokemon[i]['url'];
-        // let response = await fetch(pokemonUrl);
-        // currentAllPokemon = await response.json();
-        const number = currentAllPokemon['id'];
-        const name = currentAllPokemon['name'];
+        currentPokemon = allPokemonData[i]['data'];
+        let number = currentPokemon['id'];
+        let name = currentPokemon['name'];
 
         document.getElementById('pokedex').innerHTML += singlePokemonTemplate(i, number, name);
     }
@@ -60,25 +57,18 @@ async function renderAllPokemon() {
 window.addEventListener('scroll', () => {
     if (window.innerHeight + window.scrollY >= document.body.offsetHeight && !stopScroll) {  
         loadMorePokemon += 20;
-        nextPokemon += 20;
         stopScroll = true;             
         renderAllPokemon();
     }
 });
 
 
-/**
- * 
- * @param {*} number 
- * @param {*} name 
- * @returns 
- */
 function singlePokemonTemplate(i, number, name) {
     return `
     <div onclick="pokemonPopup(${i})" class="pokemon-card">
     <div class="type-card">
         <div class="types-content">
-            ${typeTemplate(currentAllPokemon)}
+            ${typeTemplate(allPokemonData[i])}
         </div>
         <div class="pokemonId">#${number}</div>
     </div>
@@ -88,8 +78,9 @@ function singlePokemonTemplate(i, number, name) {
     `;
 }
 
-function typeTemplate(currentPokemon) {
-    const types = currentPokemon['types'];
+
+function typeTemplate(allPokemonData) {
+    const types = allPokemonData['data']['types'];
     let htmlText = "";
     for (let j = 0; j < types.length; j++) {
         htmlText += `
@@ -102,54 +93,50 @@ function typeTemplate(currentPokemon) {
 }
 
 async function pokemonPopup(i) {
-    let pokemonUrl = completePokemon[i]['url'];
-    let response = await fetch(pokemonUrl);
-    currentAllPokemonPopup = await response.json();
-    const number = currentAllPokemonPopup['id'];
-    const name = currentAllPokemonPopup['name'];
-    currentPokemonId = i;
+    if (i == -1) {
+        return;
+    }
 
-    document.getElementById('pokemon-stats').innerHTML = popupPokemonTemplate(number, name, i);
+    let number = allPokemonData[i]['data']['id'];
+    let name = allPokemonData[i]['data']['name'];
 
-    openPopup();
-    changeArrowLeft(); 
-    loadBaseStats();
-}
-
-function popupPokemonTemplate(number, name, i) {
-    return `
+    document.getElementById('pokemon-stats').innerHTML = `
     <div class="pokemon-popup" onclick="closePopup()">
         <div class="closeMobile" onclick="closePopup()">Close</div>
         <div id="pokemon-popup-card${i}" class="pokemon-popup-card" onclick="notClose(event)">  
         <div class="type-card">
                 <div class="types-content">
-                    ${typeTemplate(currentAllPokemonPopup)}
+                    ${typeTemplate(allPokemonData[i])}
                 </div>
-                <div class="pokemonId">#${i+1}</div>   
+                <div class="pokemonId">#${number}</div>   
             </div>
             <div>${name}</div>     
-            <img src="img/pokemon/${i+1}.png" alt="">
+            <img src="img/pokemon/${number}.png" alt="">
             <div class="pokemon-info-card">
                 <menu>
-                    <div class="pokemon-left" onclick="pokemonPopup(currentPokemonId -1)"><img id="arrowLeft" src="./img/navigate-left.svg"></div>
+                    <div class="pokemon-left" onclick="pokemonPopup(${i -1})"><img id="arrowLeft" src="./img/navigate-left.svg"></div>
                     <div class="menu">
-                        <div class="menu-start" href="" onclick="loadBaseStats()">Base Stats</div>
-                        <div class="menu-end" href="" id="test" onclick="loadAbout()">About</div>
-                        <!-- <div class="menu-end" onclick="loadEvolution(i)">Evolution</div> -->
+                        <div class="menu-start" href="" onclick="loadBaseStats(${i})">Base Stats</div>
+                        <div class="menu-end" href="" id="test" onclick="loadAbout(${i})">About</div>
                     </div>
-                    <div class="pokemon-right" onclick="pokemonPopup(currentPokemonId +1)"><img src="./img/navigate.svg"></div>
+                    <div class="pokemon-right" onclick="pokemonPopup(${i +1})"><img src="./img/navigate.svg"></div>
                 </menu>
                 <div id="about"></div>
             </div>
         </div>
     </div>
     `;
+
+    openPopup();
+    changeArrowLeft(i); 
+    loadBaseStats(i);
 }
 
-function loadAbout() {
-    const species = currentAllPokemonPopup['species']['name'];
-    const height = currentAllPokemonPopup['height'];
-    const weight = currentAllPokemonPopup['weight'];
+
+function loadAbout(i) {
+    let species = allPokemonData[i]['data']['species']['name'];
+    let height = allPokemonData[i]['data']['height'];
+    let weight = allPokemonData[i]['data']['weight'];
 
     document.getElementById('about').innerHTML = /* html */`
 
@@ -167,17 +154,15 @@ function loadAbout() {
     `;
 }
 
-function loadBaseStats() {
-    const baseStats = currentAllPokemonPopup['stats'];
+function loadBaseStats(i) {
+    let baseStats = allPokemonData[i]['data']['stats'];
     document.getElementById('about').innerHTML = '';
 
     for (s = 0; s < baseStats.length; s++) {
         const baseStatName = baseStats[s]['stat']['name'];
         const baseStatValue = baseStats[s]['base_stat'];
 
-
         document.getElementById('about').innerHTML += /* html */`
-
         <div class="base-stats-row">
             <div class="base-stats-left">${baseStatName}</div>
             <div>${baseStatValue}</div>
@@ -189,39 +174,36 @@ function loadBaseStats() {
     }
 }
 
-function changeArrowLeft() {
+
+function changeArrowLeft(i) {
     let pokemonArrowSrc = document.getElementById('arrowLeft');
-    if (currentPokemonId == 0) {
+    if (allPokemonData[i]['data']['id'] == 1) {
         pokemonArrowSrc.src = './img/navigate-left-end.svg';
     }
 }
 
+
 async function searchPokemon() {
     let search = document.getElementById('inputSearch').value;
     search = search.toLowerCase();
-
     let renderPokemonList = document.getElementById('pokedex');
     renderPokemonList.innerHTML = '';
 
     renderSearchPokemon(search, renderPokemonList);
 }
 
-async function renderSearchPokemon(search, renderPokemonList) {
-    for (let i = 0; i < completePokemon.length; i++) {
-        let pokemonUrl = loadMorePokemon[i]['url'];
-        // let response = await fetch(pokemonUrl);
-        // currentSearchPokemon = await response.json();
 
-        const number = loadMorePokemon['id'];
-        const name = loadMorePokemon['name'];
+async function renderSearchPokemon(search, renderPokemonList) {
+    for (let i = 0; i < allPokemonData.length; i++) {
+        const number = allPokemonData[i]['data']['id'];
+        const name = allPokemonData[i]['data']['name'];
 
         if (name.includes(search)) {
-
             renderPokemonList.innerHTML += /* html */ `
             <div onclick="pokemonPopup(${i})" class="pokemon-card">
             <div class="type-card">
                 <div class="types-content">
-                    ${typeTemplate(currentSearchPokemon)}
+                    ${typeTemplate(allPokemonData[i])}
                 </div>
                 <div class="pokemonId">#${number}</div>
             </div>
