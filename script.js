@@ -8,7 +8,6 @@ let nextPokemon = 0;
 let stopScroll = false;
 ///////////////////////////////////////////////////////////////////////////////////////////
 let limit = 20;
-let set = 0;
 
 
 async function initAllPokemon() {
@@ -19,10 +18,11 @@ async function initAllPokemon() {
 
 
 async function loadCompletePokemon() {
-    let url = `https://pokeapi.co/api/v2/pokemon?offset=${set}&limit=${limit}`;
+    let url = `https://pokeapi.co/api/v2/pokemon?offset=0&limit=${limit}`;
     let response = await fetch(url);
     completePokemon = await response.json();
     completePokemon = completePokemon['results'];
+    allPokemonData = [];
 
     for (i = 0; i < completePokemon.length; i++) {
         let pokemonUrl = completePokemon[i]['url'];
@@ -35,7 +35,6 @@ async function loadCompletePokemon() {
 
 
 function startLoadCompletePokemon() {
-    set = 20;
     limit = 1000;
     loadCompletePokemon();
 }
@@ -43,12 +42,12 @@ function startLoadCompletePokemon() {
 
 async function renderAllPokemon() {
 
-    for (i = nextPokemon; i < loadMorePokemon; i++) {
-        currentPokemon = allPokemonData[i]['data'];
+    for (k = nextPokemon; k < loadMorePokemon; k++) {
+        currentPokemon = allPokemonData[k]['data'];
         let number = currentPokemon['id'];
         let name = currentPokemon['name'];
 
-        document.getElementById('pokedex').innerHTML += singlePokemonTemplate(i, number, name);
+        document.getElementById('pokedex').innerHTML += singlePokemonTemplate(k, number, name);
     }
     stopScroll = false;
     disableLoadingScreen();
@@ -95,6 +94,10 @@ function typeTemplate(allPokemonData) {
 }
 
 async function pokemonPopup(i) {
+    if (i == -1) {
+        return;
+    }
+
     let number = allPokemonData[i]['data']['id'];
     let name = allPokemonData[i]['data']['name'];
 
@@ -112,7 +115,7 @@ async function pokemonPopup(i) {
             <img src="img/pokemon/${number}.png" alt="">
             <div class="pokemon-info-card">
                 <menu>
-                    <div class="pokemon-left" onclick="pokemonPopup(${number -1})"><img id="arrowLeft" src="./img/navigate-left.svg"></div>
+                    <div class="pokemon-left" onclick="pokemonPopup(${i -1})"><img id="arrowLeft" src="./img/navigate-left.svg"></div>
                     <div class="menu">
                         <div class="menu-start" href="" onclick="loadBaseStats(${i})">Base Stats</div>
                         <div class="menu-end" href="" id="test" onclick="loadAbout(${i})">About</div>
@@ -174,7 +177,7 @@ function loadBaseStats(i) {
 
 function changeArrowLeft(i) {
     let pokemonArrowSrc = document.getElementById('arrowLeft');
-    if (allPokemonData[i]['id'] == 0) {
+    if (i == 1) {
         pokemonArrowSrc.src = './img/navigate-left-end.svg';
     }
 }
