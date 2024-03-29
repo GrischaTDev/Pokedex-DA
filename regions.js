@@ -1,76 +1,79 @@
-// let allRegions; // Alle Regionen aus Pokemon.
-// ////////////////////////////////////////////////
-// let regionKanto; // Region Kanto.
-// let currentKantoPokemon;
-// let currentKantoPokemonId;
-// let currentPokemonIdKanto = 0;
-// let headerTitel;
-// ////////////////////////////////////////////////
+let allRegions; // Alle Regionen aus Pokemon.
+let allRegionPokemonData = []; // Alle Pokemon die es in der API gibt!
+////////////////////////////////////////////////
+let regionKanto; // Region Kanto.
+
+let currentKantoPokemonId;
+let currentPokemonIdKanto = 0;
+let headerTitel;
+////////////////////////////////////////////////
+
+async function initRegionPokemon(currentRegion) {
+    await loadAllRegions(currentRegion);
+    startLoadCompletePokemon();
+}
+
+async function loadAllRegions(currentRegion) {
+    let url = `https://pokeapi.co/api/v2/pokedex/?offset=0&limit=32`;
+    let response = await fetch(url);
+    allRegions = await response.json();
+    allRegions = allRegions['results'];
+    loadRegion(currentRegion);
+}
+
+async function loadRegion(currentRegion) {
+    let regionsUrl = allRegions[currentRegion]['url'];
+    let response = await fetch(regionsUrl);
+    let regionLoaded = await response.json();
+    let regionAllPokemon = regionLoaded['pokemon_entries'];
+
+    for (h = 0; h < regionAllPokemon.length; h++) {
+        let pokemonUrl = regionAllPokemon[h]['pokemon_species']['url'];
+        let response = await fetch(pokemonUrl);
+        let currentRegionPokemon = await response.json();
+        let regionPokemonId = currentRegionPokemon['id'];
+        let germanPokemonName = currentRegionPokemon['names'][5]['name'];
+        loadAllPokemonApi(regionPokemonId, germanPokemonName)
+    }
+    renderRegionPokemon();
+}
+
+async function loadAllPokemonApi(regionPokemonId, germanPokemonName) {
+    let pokemonUrl = 'https://pokeapi.co/api/v2/pokemon/' + regionPokemonId;
+    let response2 = await fetch(pokemonUrl);
+    let currentKantoPokemon = await response2.json();
+    allRegionPokemonData.push({ name: germanPokemonName, data: currentKantoPokemon});
+}
+
+function renderRegionPokemon() {
+    disableLoadingScreen();
+    for (let i = nextPokemon; i < loadMorePokemon; i++) {
+        let number = allRegionPokemonData[i]['data']['id'];
+        let name = allRegionPokemonData[i]['name'];
 
 
-// async function loadRegions(currentRegion) {
-//     let url = 'https://pokeapi.co/api/v2/pokedex/?offset=0&limit=32';
-//     let response = await fetch(url);
-//     allRegions = await response.json();
-//     allRegions = allRegions['results'];
-//     loadRegionKanto(currentRegion);
-// }
+        document.getElementById('pokedex').innerHTML += singlePokemonTemplateKanto(i, number, name);
+    }
+    stopScroll = false;
+    disableLoadingScreen();
+}
 
-// function renderRegion(currentRegion, name) {
-//     headerTitel = name;
-//     loadRegionKanto(currentRegion)
-// }
+function singlePokemonTemplateKanto(i, number, name) {
+    return `
+    <div onclick="pokemonPopup(${number-1})" class="pokemon-card">
+    <div class="type-card">
+        <div class="types-content">
+            ${typeTemplate(allRegionPokemonData[i])}
+        </div>
+        <div class="pokemonId">#${i+1}</div>
+    </div>
+        <img src="img/pokemon/${number}.png" alt="">
+        <div>${name}</div>      
+    </div>
+    `;
+}
 
-// async function loadRegionKanto(currentRegion) {
-//     let kantoUrl = allRegions[currentRegion]['url'];
-//     let response = await fetch(kantoUrl);
-//     regionKanto = await response.json();
-//     renderKantoPokemon()
-// }
 
-// async function renderKantoPokemon() {
-//     let kantoPokemons = regionKanto['pokemon_entries']
-//     disableLoadingScreen();
-//     for (let i = nextPokemon; i < loadMorePokemon; i++) {
-//         let kantoPokemonUrl = kantoPokemons[i]['pokemon_species']['url'];
-//         let response = await fetch(kantoPokemonUrl);
-//         currentKantoPokemonId = await response.json();
-//         let kantoId = currentKantoPokemonId['id'];
-//         // Hier wird die Normale Pokemon API mit der ID der Pokemon aus dem Kanto Pokedex geladen.
-//         await loadAllPokemonApi(kantoId);
-
-//         let number = currentKantoPokemon['id'];
-//         let arrayNumber = currentKantoPokemon['id']-1;
-//         let name = currentKantoPokemon['name'];
-//         let listNumber = i+1;
-
-//         document.getElementById('pokedex').innerHTML += singlePokemonTemplateKanto(number, name, arrayNumber, listNumber);
-//     }
-//     stopScroll = false;
-//     disableLoadingScreen();
-// }
-
-// function singlePokemonTemplateKanto(number, name, arrayNumber, listNumber) {
-//     return `
-//     <div onclick="pokemonPopup(${arrayNumber})" class="pokemon-card">
-//     <div class="type-card">
-//         <div class="types-content">
-//             ${typeTemplate(currentKantoPokemon)}
-//         </div>
-//         <div class="pokemonId">#${listNumber}</div>
-//     </div>
-//         <img src="img/pokemon/${number}.png" alt="">
-//         <div>${name}</div>      
-//     </div>
-//     `;
-// }
-
-// async function loadAllPokemonApi(kantoId) {
-//     let pokemonUrl = 'https://pokeapi.co/api/v2/pokemon/' + kantoId;
-//     let response2 = await fetch(pokemonUrl);
-//     currentKantoPokemon = await response2.json();
-//     return currentKantoPokemon;
-// }
 
 
 // window.addEventListener('scroll', () => {
