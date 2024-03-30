@@ -21,7 +21,7 @@
     </div>
     <header>
         <a href="./"><img class="logo" src="./img/Pokédex_logo.png"></a>
-        <input type="text" id="inputSearch" placeholder="Pokemon suchen" oninput="searchPokemon()"> 
+        <input type="text" id="inputSearch" placeholder="Search pokemon" oninput="searchPokemon()"> 
     </header>
     <div class="menuRegions">
         <a href="./index.html">ALL</a>
@@ -33,6 +33,15 @@
     <div id="header-img">
         <div>KANTO</div>
     </div>
+    <div id="search-results" class="search-results d-none"></div>
+
+    <div id="progress-bar" class="progress-box-style d-none">
+        <span class="loading-title">Load all Pokemon...</span>
+        <div class="progress" role="progressbar" aria-label="Animated striped example" aria-valuenow="0" aria-valuemin="0" aria-valuemax="1000">
+            <div class="progress-bar progress-bar-striped progress-bar-animated" style="width: 0"></div>
+        </div>
+    </div>
+
     <div id="pokedex"></div>
     <div id="pokemon-stats" class="pokemon-stats-site d-none"></div>
 </body>

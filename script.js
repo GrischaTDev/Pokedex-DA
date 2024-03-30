@@ -1,13 +1,12 @@
 let completePokemon;
 let allPokemonData = []; // Alle Pokemon die es in der API gibt!
 ///////////////////////////////////////////////////////////////////////////////////////////
-let currentPokemon;
-let currentSearchPokemon;
 let loadMorePokemon = 20;
 let nextPokemon = 0;
 let stopScroll = false;
 ///////////////////////////////////////////////////////////////////////////////////////////
 let limit = 20;
+let progressBarNone = document.getElementById('progress-bar');
 
 
 async function initAllPokemon() {
@@ -24,25 +23,28 @@ async function loadCompletePokemon() {
     completePokemon = completePokemon['results'];
     allPokemonData = [];
 
+    const progressBar = document.querySelector('.progress-bar');
+
     for (i = 0; i < completePokemon.length; i++) {
         let pokemonUrl = completePokemon[i]['url'];
         let response = await fetch(pokemonUrl);
         let currentAllPokemon = await response.json();
 
-        let germanNames = `https://pokeapi.co/api/v2/pokemon-species/${i+1}`;
-        let responseNames = await fetch(germanNames);
-        let currentGermanNames = await responseNames.json();
-        let currentGermanNames2 = currentGermanNames['names'][5]['name'];
+        allPokemonData.push({ name: currentAllPokemon['name'], data: currentAllPokemon });
 
-        allPokemonData.push({ name: currentGermanNames2, data: currentAllPokemon });
+        const progressPercentage = Math.round((i + 1) / completePokemon.length * 100);
+        progressBar.style.width = `${progressPercentage}%`;
+        progressBar.innerText = `${progressPercentage}%`; // Show percentage text
     }
+    progressBarNone.classList.add('d-none');
     console.log('Alle Pokemon daten', allPokemonData);
 }
 
 
 function startLoadCompletePokemon() {
     limit = 1000;
-    loadCompletePokemon();
+    progressBarNone.classList.remove('d-none');
+    loadCompletePokemon(progressBarNone);
 }
 
 
@@ -56,16 +58,6 @@ function renderAllPokemon() {
     stopScroll = false;
     disableLoadingScreen();
 }
-
-
-window.addEventListener('scroll', () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight && !stopScroll) {  
-        nextPokemon += 20;
-        loadMorePokemon += 20;
-        stopScroll = true;             
-        renderAllPokemon();
-    }
-});
 
 
 function singlePokemonTemplate(i, number, name) {
@@ -187,10 +179,10 @@ function changeArrowLeft(i) {
 }
 
 async function searchPokemon() {
-    let search = document.getElementById('inputSearch').value;
+    let search = document.getElementById('inputSearch').value.toLowerCase();
     let renderPokemonList = document.getElementById('search-results');
-    search = search.toLowerCase();
-
+    renderPokemonList.innerHTML = '';
+    
     if (search === '') {
         renderPokemonList.innerHTML = '';
         renderPokemonList.classList.add('d-none');
@@ -243,3 +235,30 @@ function notClose(event) {
     event.stopPropagation();
 }
 
+
+function loadMore() {
+    let remainingPokemon = allPokemonData.length - loadMorePokemon;
+
+    if (remainingPokemon <= 0) {
+        console.log('Maximale Länge erreicht!');
+        return; 
+    }
+    if (remainingPokemon > 20) {
+        loadMorePokemon += 20;
+        nextPokemon += 20;
+        renderAllPokemon(); 
+    } else {
+        loadMorePokemon = allPokemonData.length;
+        renderAllPokemon(); 
+    }
+}
+
+window.addEventListener('scroll', () => {
+    if (window.location.pathname === '/') {
+        window.addEventListener('scroll', () => {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) { 
+                loadMore();
+            }
+        });
+    }
+});

@@ -8,6 +8,7 @@ let endIndex = 20;
 loadMorePokemon = 20;
 nextPokemon = 0;
 ////////////////////////////////////////////////
+progressBarNone = document.getElementById('progress-bar');
 
 async function initAllRegionPokemon(currentRegion) {
     await loadRegion(currentRegion);
@@ -30,14 +31,14 @@ async function loadRegion(currentRegion) {
 async function loadRegionPokemon() {
     allRegionPokemonData = [];
     const promises = [];
+
     for (let h = startIndex; h < endIndex; h++) { 
         let pokemonUrl = regionAllPokemon[h]['pokemon_species']['url'];
         let response = await fetch(pokemonUrl);
         let currentRegionPokemon = await response.json();
 
         let regionPokemonId = currentRegionPokemon['id'];
-        let germanPokemonName = currentRegionPokemon['names'][5]['name'];
-        promises.push(loadAllPokemonApi(regionPokemonId, germanPokemonName));
+        promises.push(loadAllPokemonApi(regionPokemonId));
     }
     await Promise.all(promises);
 }
@@ -48,11 +49,11 @@ function startLoadCompleteRegionPokemon() {
 }
 
 
-async function loadAllPokemonApi(regionPokemonId, germanPokemonName) {
+async function loadAllPokemonApi(regionPokemonId) {
     let allPokemonUrl = 'https://pokeapi.co/api/v2/pokemon/' + regionPokemonId;
     let response2 = await fetch(allPokemonUrl);
     let currenRegionPokemon = await response2.json();
-    allRegionPokemonData.push({ name: germanPokemonName, data: currenRegionPokemon});
+    allRegionPokemonData.push({ name: currenRegionPokemon['name'], data: currenRegionPokemon});
 }
 
 
@@ -82,15 +83,25 @@ function singlePokemonTemplateKanto(i, number, name) {
     `;
 }
 
+function loadMoreRegion() {
+    let remainingPokemon = allRegionPokemonData.length - loadMorePokemon;
 
+    if (remainingPokemon <= 0) {
+        console.log('Maximale Länge erreicht!');
+        return; 
+    }
+    if (remainingPokemon > 20) {
+        loadMorePokemon += 20;
+        nextPokemon += 20;
+        renderRegionPokemon(); 
+    } else {
+        loadMorePokemon = allRegionPokemonData.length;
+        renderRegionPokemon(); 
+    }
+}
 
-
-// window.addEventListener('scroll', () => {
-//     const currentPageUrl = window.location.href;
-//     if (!currentPageUrl.includes('/index.html') && window.innerHeight + window.scrollY >= document.body.offsetHeight && !stopScroll) {  
-//         loadMorePokemon += 20;
-//         nextPokemon += 20;
-//         stopScroll = true;             
-//         renderKantoPokemon();
-//     }
-// });
+window.addEventListener('scroll', () => {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) { 
+        loadMoreRegion();
+    }
+});
