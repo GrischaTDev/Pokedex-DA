@@ -1,62 +1,71 @@
-let allRegions; // Alle Regionen aus Pokemon.
+let regionAllPokemon;
 let allRegionPokemonData = []; // Alle Pokemon die es in der API gibt!
-////////////////////////////////////////////////
-let regionKanto; // Region Kanto.
 
-let currentKantoPokemonId;
-let currentPokemonIdKanto = 0;
-let headerTitel;
+////////////////////////////////////////////////
+let startIndex = 0;
+let endIndex = 20;
+
+loadMorePokemon = 20;
+nextPokemon = 0;
 ////////////////////////////////////////////////
 
-async function initRegionPokemon(currentRegion) {
-    await loadAllRegions(currentRegion);
+async function initAllRegionPokemon(currentRegion) {
+    await loadRegion(currentRegion);
+    renderRegionPokemon();
+    startLoadCompleteRegionPokemon();
     startLoadCompletePokemon();
 }
 
-async function loadAllRegions(currentRegion) {
-    let url = `https://pokeapi.co/api/v2/pokedex/?offset=0&limit=32`;
-    let response = await fetch(url);
-    allRegions = await response.json();
-    allRegions = allRegions['results'];
-    loadRegion(currentRegion);
-}
 
 async function loadRegion(currentRegion) {
-    let regionsUrl = allRegions[currentRegion]['url'];
+    let regionsUrl = `https://pokeapi.co/api/v2/pokedex/${currentRegion}`;
     let response = await fetch(regionsUrl);
     let regionLoaded = await response.json();
-    let regionAllPokemon = regionLoaded['pokemon_entries'];
+    regionAllPokemon = regionLoaded['pokemon_entries'];
 
-    for (h = 0; h < regionAllPokemon.length; h++) {
+    await loadRegionPokemon();
+    
+}
+
+async function loadRegionPokemon() {
+    allRegionPokemonData = [];
+    const promises = [];
+    for (let h = startIndex; h < endIndex; h++) { 
         let pokemonUrl = regionAllPokemon[h]['pokemon_species']['url'];
         let response = await fetch(pokemonUrl);
         let currentRegionPokemon = await response.json();
+
         let regionPokemonId = currentRegionPokemon['id'];
         let germanPokemonName = currentRegionPokemon['names'][5]['name'];
-        loadAllPokemonApi(regionPokemonId, germanPokemonName)
+        promises.push(loadAllPokemonApi(regionPokemonId, germanPokemonName));
     }
-    renderRegionPokemon();
+    await Promise.all(promises);
 }
+
+function startLoadCompleteRegionPokemon() {
+    endIndex = regionAllPokemon.length;
+    loadRegionPokemon();
+}
+
 
 async function loadAllPokemonApi(regionPokemonId, germanPokemonName) {
-    let pokemonUrl = 'https://pokeapi.co/api/v2/pokemon/' + regionPokemonId;
-    let response2 = await fetch(pokemonUrl);
-    let currentKantoPokemon = await response2.json();
-    allRegionPokemonData.push({ name: germanPokemonName, data: currentKantoPokemon});
+    let allPokemonUrl = 'https://pokeapi.co/api/v2/pokemon/' + regionPokemonId;
+    let response2 = await fetch(allPokemonUrl);
+    let currenRegionPokemon = await response2.json();
+    allRegionPokemonData.push({ name: germanPokemonName, data: currenRegionPokemon});
 }
 
+
 function renderRegionPokemon() {
-    disableLoadingScreen();
     for (let i = nextPokemon; i < loadMorePokemon; i++) {
         let number = allRegionPokemonData[i]['data']['id'];
         let name = allRegionPokemonData[i]['name'];
-
-
         document.getElementById('pokedex').innerHTML += singlePokemonTemplateKanto(i, number, name);
     }
     stopScroll = false;
     disableLoadingScreen();
 }
+
 
 function singlePokemonTemplateKanto(i, number, name) {
     return `

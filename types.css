@@ -6,6 +6,9 @@
     color: white;
     background-color: rgb(48, 48, 48);
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .grass {
@@ -13,6 +16,9 @@
     color: white;
     background-color: #9bcc51;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .fire {
@@ -20,6 +26,9 @@
     color: white;
     background-color: #fd7e24;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .water {
@@ -27,6 +36,9 @@
     color: white;
     background-color: #4592c4;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .bug {
@@ -34,6 +46,9 @@
     color: white;
     background-color: #729f3f;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .poison {
@@ -41,6 +56,9 @@
     color: white;
     background-color: #b97fc9;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .flying {
@@ -48,6 +66,9 @@
     color: white;
     background-color: #3ec8ef;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .normal {
@@ -55,6 +76,9 @@
     color: white;
     background-color: #a4acaf;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .electric {
@@ -62,6 +86,9 @@
     color: white;
     background-color: #eed536;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .fee {
@@ -69,6 +96,9 @@
     color: white;
     background-color: #fcb9e9;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .fight {
@@ -76,6 +106,9 @@
     color: white;
     background-color: #d56623;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .psycho {
@@ -83,6 +116,9 @@
     color: white;
     background-color: #f366ba;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .stone {
@@ -90,6 +126,9 @@
     color: white;
     background-color: #a38d21;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .steel {
@@ -97,6 +136,9 @@
     color: white;
     background-color: #9eb6b7;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .ice {
@@ -104,6 +146,9 @@
     color: white;
     background-color: #51c4e7;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .ghost {
@@ -111,6 +156,9 @@
     color: white;
     background-color: #7b62a3;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .ground {
@@ -118,6 +166,9 @@
     color: white;
     background-color: #ab9842;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .fighting {
@@ -125,6 +176,9 @@
     color: white;
     background-color: #d56623;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .psychic {
@@ -132,6 +186,9 @@
     color: white;
     background-color: #f365b9;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .fairy {
@@ -139,6 +196,9 @@
     color: white;
     background-color: #fcb9e9;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .rock {
@@ -146,6 +206,9 @@
     color: white;
     background-color: #757572;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .dragon {
@@ -153,6 +216,9 @@
     color: white;
     background-color: #f16f57;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }
 
 .dark {
@@ -160,4 +226,7 @@
     color: white;
     background-color: #4d4d4d;
     border-radius: 6px;
+    width: 50px;
+    display: flex;
+    justify-content: center;
 }

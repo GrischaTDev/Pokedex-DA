@@ -28,7 +28,13 @@ async function loadCompletePokemon() {
         let pokemonUrl = completePokemon[i]['url'];
         let response = await fetch(pokemonUrl);
         let currentAllPokemon = await response.json();
-        allPokemonData.push({ name: currentAllPokemon['name'], data: currentAllPokemon });
+
+        let germanNames = `https://pokeapi.co/api/v2/pokemon-species/${i+1}`;
+        let responseNames = await fetch(germanNames);
+        let currentGermanNames = await responseNames.json();
+        let currentGermanNames2 = currentGermanNames['names'][5]['name'];
+
+        allPokemonData.push({ name: currentGermanNames2, data: currentAllPokemon });
     }
     console.log('Alle Pokemon daten', allPokemonData);
 }
@@ -40,12 +46,10 @@ function startLoadCompletePokemon() {
 }
 
 
-async function renderAllPokemon() {
-
+function renderAllPokemon() {
     for (k = nextPokemon; k < loadMorePokemon; k++) {
-        currentPokemon = allPokemonData[k]['data'];
-        let number = currentPokemon['id'];
-        let name = currentPokemon['name'];
+        let number = allPokemonData[k]['data']['id'];
+        let name = allPokemonData[k]['name'];
 
         document.getElementById('pokedex').innerHTML += singlePokemonTemplate(k, number, name);
     }
@@ -99,7 +103,7 @@ async function pokemonPopup(i) {
     }
 
     let number = allPokemonData[i]['data']['id'];
-    let name = allPokemonData[i]['data']['name'];
+    let name = allPokemonData[i]['name'];
 
     document.getElementById('pokemon-stats').innerHTML = `
     <div class="pokemon-popup" onclick="closePopup()">
@@ -184,22 +188,25 @@ function changeArrowLeft(i) {
 
 async function searchPokemon() {
     let search = document.getElementById('inputSearch').value;
+    let renderPokemonList = document.getElementById('search-results');
     search = search.toLowerCase();
 
-    let renderPokemonList = document.getElementById('pokedex');
-    renderPokemonList.innerHTML = '';
-
+    if (search === '') {
+        renderPokemonList.innerHTML = '';
+        renderPokemonList.classList.add('d-none');
+        return;
+    }; 
+    renderPokemonList.classList.remove('d-none');
     renderSearchPokemon(search, renderPokemonList);
 }
 
 async function renderSearchPokemon(search, renderPokemonList) {
     for (let i = 0; i < allPokemonData.length; i++) {
 
-
         const number = allPokemonData[i]['data']['id'];
-        const name = allPokemonData[i]['data']['name'];
+        const name = allPokemonData[i]['name'];
 
-        if (name.includes(search)) {
+        if (name.toLowerCase().includes(search)) {
 
             renderPokemonList.innerHTML += /* html */ `
             <div onclick="pokemonPopup(${i})" class="pokemon-card">
