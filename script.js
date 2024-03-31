@@ -1,11 +1,13 @@
 let completePokemon;
 let allPokemonData = []; // Alle Pokemon die es in der API gibt!
+let allCatchedPokemon = [];
 ///////////////////////////////////////////////////////////////////////////////////////////
 let loadMorePokemon = 20;
 let nextPokemon = 0;
 let stopScroll = false;
 ///////////////////////////////////////////////////////////////////////////////////////////
 let limit = 20;
+let currentDraggedPokemon;
 let progressBarNone = document.getElementById('progress-bar');
 
 
@@ -13,6 +15,8 @@ async function initAllPokemon() {
     await loadCompletePokemon();
     renderAllPokemon();
     startLoadCompletePokemon();
+    load();
+    renderAllDraggedPokemon();
 }
 
 
@@ -62,7 +66,7 @@ function renderAllPokemon() {
 
 function singlePokemonTemplate(i, number, name) {
     return `
-    <div onclick="pokemonPopup(${i})" class="pokemon-card">
+    <div draggable="true" ondragstart="startDragging(${i})" onclick="pokemonPopup(${i})" class="pokemon-card">
     <div class="type-card">
         <div class="types-content">
             ${typeTemplate(allPokemonData[i])}
@@ -88,6 +92,7 @@ function typeTemplate(allPokemonData) {
     }
     return htmlText;
 }
+
 
 async function pokemonPopup(i) {
     if (i == -1) {
@@ -201,7 +206,7 @@ async function renderSearchPokemon(search, renderPokemonList) {
         if (name.toLowerCase().includes(search)) {
 
             renderPokemonList.innerHTML += /* html */ `
-            <div onclick="pokemonPopup(${i})" class="pokemon-card">
+            <div draggable="true" ondragstart="startDragging(${i})" onclick="pokemonPopup(${i})" class="pokemon-card">
             <div class="type-card">
                 <div class="types-content">
                     ${typeTemplate(allPokemonData[i])}
@@ -254,11 +259,10 @@ function loadMore() {
 }
 
 window.addEventListener('scroll', () => {
-    if (window.location.pathname === '/') {
-        window.addEventListener('scroll', () => {
-            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) { 
-                loadMore();
-            }
-        });
+    if (document.getElementById('load-more-function')) { 
+        if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) { 
+            loadMore();
+            console.log('geht nicht')
+        }
     }
 });

@@ -89,8 +89,12 @@ header {
 
 }
 
+.pokemon-content {
+    display: flex;
+    width: 100%;
+}
+
 #pokedex {
-    max-width: 1400px;
     margin: 20px 0 200px 0;
     display: flex;
     flex-wrap: wrap;
@@ -362,6 +366,7 @@ menu {
 .search-results .pokemon-card {
     height: 50px;
     width: 30%;
+    min-width: 300px;
     display: flex;
     flex-direction: row;
     justify-content: flex-start;

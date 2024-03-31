@@ -1,0 +1,81 @@
+#catch-me-container {
+    border-left: 2px solid #0c1870;
+    background-color: #ffce31;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    gap: 20px;
+    max-width: 400px;
+}
+
+#catch-me {
+    background-color: #ffce31;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.pokemon-card-drag {
+    height: 200px;
+    width: auto;
+    font-size: 16px;
+    font-weight: bold;
+    text-transform: capitalize;
+    color: rgb(137 137 137);
+    background-color: rgb(255, 255, 255);
+    border-radius: 16px;
+    box-shadow: 0 1px 2px 0 rgba(60,64,67,0.302), 0 2px 6px 2px rgba(60,64,67,0.149);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    transition: 0.3s background-color;
+}
+
+.pokemon-card-drag:hover {
+    height: 200px;
+    width: auto;
+    background-color: rgb(237 237 237 / 75%);
+    cursor: pointer;
+}
+
+.pokemon-card-drag img {
+    height: 100px;
+    transition: height 0.2s;
+}
+
+.pokemon-card-drag img:hover {
+    height: 120px;
+}
+
+.catch-me-info {
+    font-weight: bold;
+    color: #0c1870;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 20px;
+}
+
+.catch-me-info img {
+    height: 60px;
+}
+
+.clear-catched-btn {
+    background-color: #0c1870;
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.catched {
+    color: #0c1870;
+    padding: 10px;
+    border-radius: 8px;
+}

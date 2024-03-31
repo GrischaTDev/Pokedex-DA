@@ -4,17 +4,19 @@ let allRegionPokemonData = []; // Alle Pokemon die es in der API gibt!
 ////////////////////////////////////////////////
 let startIndex = 0;
 let endIndex = 20;
-
 loadMorePokemon = 20;
 nextPokemon = 0;
 ////////////////////////////////////////////////
 progressBarNone = document.getElementById('progress-bar');
+
 
 async function initAllRegionPokemon(currentRegion) {
     await loadRegion(currentRegion);
     renderRegionPokemon();
     startLoadCompleteRegionPokemon();
     startLoadCompletePokemon();
+    load();
+    renderAllDraggedPokemon();
 }
 
 
@@ -70,7 +72,7 @@ function renderRegionPokemon() {
 
 function singlePokemonTemplateKanto(i, number, name) {
     return `
-    <div onclick="pokemonPopup(${number-1})" class="pokemon-card">
+    <div draggable="true" ondragstart="startDragging(${number-1})" onclick="pokemonPopup(${number-1})" class="pokemon-card">
     <div class="type-card">
         <div class="types-content">
             ${typeTemplate(allRegionPokemonData[i])}
