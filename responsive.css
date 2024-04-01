@@ -11,6 +11,10 @@
     .pokemon-content-style {
         width: 100%;
     }
+
+    .progress {
+        width: 90%;
+    }
 }
 
 @media(max-width: 480px) {

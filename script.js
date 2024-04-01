@@ -1,16 +1,18 @@
 let completePokemon;
 let allPokemonData = []; // Alle Pokemon die es in der API gibt!
 let allCatchedPokemon = [];
-///////////////////////////////////////////////////////////////////////////////////////////
 let loadMorePokemon = 20;
 let nextPokemon = 0;
 let stopScroll = false;
-///////////////////////////////////////////////////////////////////////////////////////////
 let limit = 20;
 let currentDraggedPokemon;
 let progressBarNone = document.getElementById('progress-bar');
+///////////////////////////////////////////////////////////////////////////////////////////
 
 
+/**
+ * Loads important function at the start of the page
+ */
 async function initAllPokemon() {
     await loadCompletePokemon();
     renderAllPokemon();
@@ -20,6 +22,9 @@ async function initAllPokemon() {
 }
 
 
+/**
+ * Loads all existing Pokemon up to a maximum of 1000
+ */
 async function loadCompletePokemon() {
     let url = `https://pokeapi.co/api/v2/pokemon?offset=0&limit=${limit}`;
     let response = await fetch(url);
@@ -45,6 +50,9 @@ async function loadCompletePokemon() {
 }
 
 
+/**
+ * Changes the limit on how many Pokemon can be loaded to 1000
+ */
 function startLoadCompletePokemon() {
     limit = 1000;
     progressBarNone.classList.remove('d-none');
@@ -52,6 +60,9 @@ function startLoadCompletePokemon() {
 }
 
 
+/**
+ * Renders all Pokemon
+ */
 function renderAllPokemon() {
     for (k = nextPokemon; k < loadMorePokemon; k++) {
         let number = allPokemonData[k]['data']['id'];
@@ -65,6 +76,14 @@ function renderAllPokemon() {
 }
 
 
+/**
+ * Pokemon Card HTML
+ * 
+ * @param {index} i - Pokemon Index
+ * @param {number} number - Pokemon ID
+ * @param {string} name - Pokemon Name
+ * @param {string} typesStyle - Add new Class for Type style
+ */
 function singlePokemonTemplate(i, number, name, typesStyle) {
     return `
     <div draggable="true" ondragstart="startDragging(${i})" onclick="pokemonPopup(${i})" class="pokemon-card ${typesStyle}">
@@ -81,6 +100,11 @@ function singlePokemonTemplate(i, number, name, typesStyle) {
 }
 
 
+/**
+ * Renders all types of a Pokemon
+ * 
+ * @param {data} allPokemonData - All Pokemon data
+ */
 function typeTemplate(allPokemonData) {
     const types = allPokemonData['data']['types'];
     let htmlText = "";
@@ -95,6 +119,11 @@ function typeTemplate(allPokemonData) {
 }
 
 
+/**
+ * Opens the Pokemon Card in a new pop-up window
+ * 
+ * @param {index} i - Pokemon index
+ */
 async function pokemonPopup(i) {
     if (i == -1) {
         return;
@@ -136,6 +165,11 @@ async function pokemonPopup(i) {
 }
 
 
+/**
+ * Loads the Pokemon About me data
+ * 
+ * @param {index} i - Pokemon Index
+ */
 function loadAbout(i) {
     let species = allPokemonData[i]['data']['species']['name'];
     let height = allPokemonData[i]['data']['height'];
@@ -157,6 +191,12 @@ function loadAbout(i) {
     `;
 }
 
+
+/**
+ * Loads the Pokemon base stats
+ * 
+ * @param {index} i - Pokemon Index
+ */
 function loadBaseStats(i) {
     let baseStats = allPokemonData[i]['data']['stats'];
     document.getElementById('about').innerHTML = '';
@@ -177,6 +217,12 @@ function loadBaseStats(i) {
     }
 }
 
+
+/**
+ * Hides the left button on the first Pokemon
+ * 
+ * @param {index} i - Pokemon Index 
+ */
 function changeArrowLeft(i) {
     let pokemonArrowSrc = document.getElementById('arrowLeft');
     if (i == 1) {
@@ -184,6 +230,10 @@ function changeArrowLeft(i) {
     }
 }
 
+
+/**
+ * Starts the search function and opens the results field
+ */
 async function searchPokemon() {
     let search = document.getElementById('inputSearch').value.toLowerCase();
     let renderPokemonList = document.getElementById('search-results');
@@ -198,6 +248,13 @@ async function searchPokemon() {
     renderSearchPokemon(search, renderPokemonList);
 }
 
+
+/**
+ * Renders the pokemon you are looking for
+ * 
+ * @param {value} search - Inputfield value
+ * @param {id} renderPokemonList - Render results field
+ */
 async function renderSearchPokemon(search, renderPokemonList) {
     for (let i = 0; i < allPokemonData.length; i++) {
 
@@ -222,26 +279,46 @@ async function renderSearchPokemon(search, renderPokemonList) {
     }
 }
 
+
+/**
+ * Deactivates the loading screen
+ */
 function disableLoadingScreen() {
     document.getElementById('loadingScreen').classList.add('d-none');
     document.getElementById('body').classList.remove('hide-scrollbar');
 }
 
+
+/**
+ * Opens the Pokemon pop-up
+ */
 function openPopup() {
     document.getElementById('pokemon-stats').classList.remove('d-none');
     document.getElementById('body').classList.add('hide-scrollbar');
 }
 
+
+/**
+ * Closes the Pokemon popup
+ */
 function closePopup() {
     document.getElementById('pokemon-stats').classList.add('d-none');
     document.getElementById('body').classList.remove('hide-scrollbar');
 }
 
+
+/**
+ * prevents the Pokemon popup from closing when clicking on the content
+ * 
+ * @param {event} event 
+ */
 function notClose(event) {
     event.stopPropagation();
 }
 
-
+/**
+ * Loads the next Pokemon when scrolling down
+ */
 function loadMore() {
     let remainingPokemon = allPokemonData.length - loadMorePokemon;
 
@@ -259,6 +336,10 @@ function loadMore() {
     }
 }
 
+
+/**
+ * Loads the next Pokemon when scrolling down
+ */
 window.addEventListener('scroll', () => {
     if (document.getElementById('load-more-function')) { 
         if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 200) { 

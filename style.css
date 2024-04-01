@@ -158,8 +158,6 @@ header {
     gap: 8px;
 }
 
-/* >>>> Pokemon Popup <<<< */
-
 .pokemon-stats-site {
     height: 100vh;
     width: 100%;
@@ -286,8 +284,6 @@ menu {
     height: 52px;
 }
 
-/* >>>> Pokemon about info <<<< */
-
 #about {
     margin: 60px;
     display: flex;
@@ -344,8 +340,6 @@ menu {
 .progress-bar {
     background-color: rgb(13, 177, 127) !important;
 }
-
-/* >>>> Pokemon search container <<<< */
 
 .search-results {
     height: auto;
@@ -406,7 +400,6 @@ menu {
     align-items: center;
     width: 80%;
 }
-
 
 button, input, optgroup, select, textarea {
     margin: 0;
