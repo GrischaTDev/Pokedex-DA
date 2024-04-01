@@ -20,30 +20,33 @@ function renderAllDraggedPokemon() {
     for (let f = 0; f < allCatchedPokemon.length; f++) {
         let number = allCatchedPokemon[f]['data']['id'];
         let name = allCatchedPokemon[f]['name'];
-        document.getElementById('catch-me').innerHTML += singlePokemonTemplateDragged(f, number, name);
+        let typesStyle = allCatchedPokemon[f]['data']['types'][0]['type']['name']+'-border';
+        document.getElementById('catch-me').innerHTML += singlePokemonTemplateDragged(f, number, name, typesStyle);
     }
 
     if (allCatchedPokemon.length > 0) {
         let catchedInfo = document.getElementById('catch-me-info');
         catchedInfo.innerHTML = '';
         catchedInfo.innerHTML = /* html */ `
-            <span class="catched">Catched: ${allCatchedPokemon.length}</span>
+            <span class="catched"><img src="./img/pokeball.svg" alt="">Catched Pokemon: ${allCatchedPokemon.length}</span>
             <div class="clear-catched-btn" onclick="clearCatchedPokemon()">Clear all</div>
         `;
     } else {
         let catchedInfo = document.getElementById('catch-me-info');
         catchedInfo.innerHTML = '';
         catchedInfo.innerHTML = /* html */ `
+        <div class="catch-me-empty">
             <span>Catch your favorite pokemon <br>with drag and drop!</span>
             <img src="img/pfeil.svg" alt="">
+        </div>
         `;
     }
 }
 
 
-function singlePokemonTemplateDragged(i, number, name) {
+function singlePokemonTemplateDragged(i, number, name, typesStyle) {
     return `
-    <div draggable="true" ondragstart="startDragging(${i})" onclick="pokemonPopup(${number-1})" class="pokemon-card-drag">
+    <div draggable="true" ondragstart="startDragging(${i})" onclick="pokemonPopup(${number-1})" class="pokemon-card-drag ${typesStyle}">
     <div class="type-card">
         <div class="types-content">
             ${typeTemplate(allCatchedPokemon[i])}

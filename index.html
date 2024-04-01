@@ -35,10 +35,10 @@
     <div id="header-img">
         <div>All Pokemon</div>
     </div>
-    <div id="search-results" class="search-results d-none"></div>
 
     <div class="pokemon-content">
-        <div>
+        <div class="pokemon-content-style">
+            <div id="search-results" class="search-results d-none"></div>
             <div id="progress-bar" class="progress-box-style d-none">
                 <span class="loading-title">Load all Pokemon...</span>
                 <span class="loading-title">Wait to be able to use the full range of functions!</span>
@@ -49,10 +49,7 @@
             <div id="pokedex"></div>
         </div>
         <div id="catch-me-container">
-            <div id="catch-me-info" class="catch-me-info">
-                <span>Catch your favorite pokemon <br>with drag and drop!</span>
-                <img src="img/pfeil.svg" alt="">
-            </div>
+            <div id="catch-me-info" class="catch-me-info"></div>
             <div id="catch-me" ondrop="moveTo()" ondragover="allowDrop(event)"></div>
         </div>
     </div>

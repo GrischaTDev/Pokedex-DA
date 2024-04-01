@@ -50,7 +50,7 @@ header {
     background-size: cover;
     background-position: center;
     height: 200px;
-    width: 100vw;
+    width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -91,6 +91,7 @@ header {
 
 .pokemon-content {
     display: flex;
+    justify-content: space-between;
     width: 100%;
 }
 
@@ -219,7 +220,7 @@ menu {
     padding: 20px 20px 20px 0;
     font-weight: bold;
     color: #000000cc;
-    border-bottom: 1px solid orange;
+    border-bottom: 1px solid #ffce31;
     cursor: pointer;
 }
 
@@ -228,7 +229,7 @@ menu {
     padding: 20px;
     font-weight: bold;
     color: #000000cc;
-    border-bottom: 1px solid orange;
+    border-bottom: 1px solid #ffce31;
     cursor: pointer;
 }
 
@@ -237,7 +238,7 @@ menu {
     padding: 20px 0 20px 20px;
     font-weight: bold;
     color: #000000cc;
-    border-bottom: 1px solid orange;
+    border-bottom: 1px solid #ffce31;
     cursor: pointer;
 }
 
@@ -397,4 +398,26 @@ menu {
 
 .loading-title {
     font-weight: bold;
+}
+
+.pokemon-content-style {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80%;
+}
+
+
+button, input, optgroup, select, textarea {
+    margin: 0;
+    font-family: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    background-color: #ffce31;
+    border: none;
+    padding: 10px;
+    color: #0c1870;
+    width: 300px;
+    border-radius: 10px;
+    border-bottom: 2px solid #0c1870;
 }

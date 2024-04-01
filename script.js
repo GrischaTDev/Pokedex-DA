@@ -56,17 +56,18 @@ function renderAllPokemon() {
     for (k = nextPokemon; k < loadMorePokemon; k++) {
         let number = allPokemonData[k]['data']['id'];
         let name = allPokemonData[k]['name'];
+        let typesStyle = allPokemonData[k]['data']['types'][0]['type']['name']+'-border';
 
-        document.getElementById('pokedex').innerHTML += singlePokemonTemplate(k, number, name);
+        document.getElementById('pokedex').innerHTML += singlePokemonTemplate(k, number, name, typesStyle);
     }
     stopScroll = false;
     disableLoadingScreen();
 }
 
 
-function singlePokemonTemplate(i, number, name) {
+function singlePokemonTemplate(i, number, name, typesStyle) {
     return `
-    <div draggable="true" ondragstart="startDragging(${i})" onclick="pokemonPopup(${i})" class="pokemon-card">
+    <div draggable="true" ondragstart="startDragging(${i})" onclick="pokemonPopup(${i})" class="pokemon-card ${typesStyle}">
     <div class="type-card">
         <div class="types-content">
             ${typeTemplate(allPokemonData[i])}
