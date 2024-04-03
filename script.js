@@ -124,7 +124,7 @@ function typeTemplate(allPokemonData) {
  * 
  * @param {index} i - Pokemon index
  */
-async function pokemonPopup(i) {
+function pokemonPopup(i) {
     if (i == -1) {
         return;
     }
@@ -234,7 +234,7 @@ function changeArrowLeft(i) {
 /**
  * Starts the search function and opens the results field
  */
-async function searchPokemon() {
+function searchPokemon() {
     let search = document.getElementById('inputSearch').value.toLowerCase();
     let renderPokemonList = document.getElementById('search-results');
     renderPokemonList.innerHTML = '';
@@ -255,13 +255,13 @@ async function searchPokemon() {
  * @param {value} search - Inputfield value
  * @param {id} renderPokemonList - Render results field
  */
-async function renderSearchPokemon(search, renderPokemonList) {
+function renderSearchPokemon(search, renderPokemonList) {
     for (let i = 0; i < allPokemonData.length; i++) {
 
         const number = allPokemonData[i]['data']['id'];
         const name = allPokemonData[i]['name'];
 
-        if (name.toLowerCase().includes(search)) {
+        if (name.toLowerCase().includes(search) && search.length >= 2) {
 
             renderPokemonList.innerHTML += /* html */ `
             <div draggable="true" ondragstart="startDragging(${i})" onclick="pokemonPopup(${i})" class="pokemon-card">

@@ -44,7 +44,7 @@ function renderAllDraggedPokemon() {
         let catchedInfo = document.getElementById('catch-me-info');
         catchedInfo.innerHTML = '';
         catchedInfo.innerHTML = /* html */ `
-            <span class="catched"><img src="./img/pokeball.svg" alt="">Catched Pokemon: ${allCatchedPokemon.length}</span>
+            <span class="catched"><img src="./img/pokeball.svg" alt="">Caught Pokemon: ${allCatchedPokemon.length}</span>
             <div class="clear-catched-btn" onclick="clearCatchedPokemon()">Clear all</div>
         `;
     } else {
